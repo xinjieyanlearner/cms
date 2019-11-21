@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.cms.dao.extend.BaseRoleExtendMapper">
+  <resultMap id="BaseRoleMap" type="com.briup.apps.cms.bean.BaseRole">
+    <id column="bid" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <resultMap id="BaseResultPrivilege" type="com.briup.apps.cms.bean.BasePrivilege">
+    <id column="pid" jdbcType="BIGINT" property="id" />
+    <result column="pname" jdbcType="VARCHAR" property="name" />
+    <result column="pdescription" jdbcType="VARCHAR" property="description" />
+    <result column="proute" jdbcType="VARCHAR" property="route" />
+    <result column="ptype" jdbcType="VARCHAR" property="type" />
+    <result column="picon" jdbcType="VARCHAR" property="icon" />
+    <result column="pparent_id" jdbcType="BIGINT" property="parentId" />
+  </resultMap>
+  <resultMap type="com.briup.apps.cms.bean.extend.BaseRoleExtend" id="BaseRoleExtendMap" extends="BaseRoleMap">
+  	<collection property="privileges" resultMap="BaseResultPrivilege"></collection>
+  </resultMap>
+  <select id="selectAll" resultMap="BaseRoleExtendMap">
+  	SELECT br.id bid,br.name,
+  	bp.id pid,bp.name pname,bp.description,bp.route,bp.type,bp.icon,bp.parent_id,
+  	brp.id brpid,brp.role_id,brp.privilege_id
+  	FROM base_role br 
+  	LEFT OUTER JOIN base_role_privilege brp
+  	ON br.id =brp.role_id
+  	LEFT OUTER JOIN base_privilege bp
+  	ON bp.id = brp.privilege_id
+  </select>
+</mapper>

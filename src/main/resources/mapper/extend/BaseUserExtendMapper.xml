@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.cms.dao.extend.BaseUserExtendMapper">
+  <resultMap id="BaseResultBaseUser" type="com.briup.apps.cms.bean.BaseUser">
+    <id column="uid" jdbcType="BIGINT" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="realname" jdbcType="VARCHAR" property="realname" />
+    <result column="gender" jdbcType="VARCHAR" property="gender" />
+    <result column="birth" jdbcType="BIGINT" property="birth" />
+    <result column="register_time" jdbcType="BIGINT" property="registerTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="user_face" jdbcType="VARCHAR" property="userFace" />
+  </resultMap>
+  
+  <resultMap id="BaseResultBaseRole" type="com.briup.apps.cms.bean.BaseRole">
+    <id column="rid" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  
+  <resultMap type="com.briup.apps.cms.bean.extend.BaseUserExtend" id="BaseUserExtendMap" extends="BaseResultBaseUser">
+  	<collection property="roles" resultMap="BaseResultBaseRole"></collection>
+  </resultMap>
+  <select id="selectAll" resultMap="BaseUserExtendMap">
+  	SELECT bu.id uid,bu.username,bu.password,bu.telephone,bu.realname,bu.gender,bu.birth,
+ 	bu.register_time,bu.status,bu.user_face,
+ 	bur.id,bur.user_id,bur.role_id,
+ 	br.id rid,br.name
+ 	FROM base_user bu LEFT OUTER JOIN base_user_role bur
+ 	ON bu.id=bur.user_id LEFT OUTER JOIN base_role br
+ 	ON bur.role_id=br.id
+  </select>
+  <select id="selectById" parameterType="Long" resultMap="BaseUserExtendMap">
+  	SELECT bu.id uid,bu.username,bu.password,bu.telephone,bu.realname,bu.gender,bu.birth,
+ 	bu.register_time,bu.status,bu.user_face,
+ 	bur.id,bur.user_id,bur.role_id,
+ 	br.id rid,br.name
+ 	FROM base_user bu LEFT OUTER JOIN base_user_role bur
+ 	ON bu.id=bur.user_id LEFT OUTER JOIN base_role br
+ 	ON bur.role_id=br.id
+ 	WHERE bu.id=#{id}
+  </select>
+</mapper>
